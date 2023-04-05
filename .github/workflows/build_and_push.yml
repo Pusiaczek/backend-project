@@ -29,6 +29,7 @@ jobs:
         ECR_REGISTERY: backend-project
         ECR_IMAGE_TAG: ${{ github.ref_name }}
       run: |
+        echo << ls -la
         echo $ECR_URL/$ECR_REGISTERY:latest
         echo $ECR_URL/$ECR_REGISTERY:latest $ECR_URL/$ECR_REGISTERY:$ECR_IMAGE_TAG
         echo $ECR_URL/$ECR_REGISTERY:latest
