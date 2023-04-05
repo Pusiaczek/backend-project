@@ -8,7 +8,7 @@ permissions:
   contents: read  
 
 jobs:
-  ecr_login:
+  build_and_push:
     runs-on: ubuntu-latest
     
     steps:
@@ -28,8 +28,11 @@ jobs:
         ECR_URL: ${{ steps.login-ecr.outputs.registry }}
         ECR_REGISTERY: backend-project
         ECR_IMAGE_TAG: ${{ github.ref_name }}
-        
       run: |
+        echo $ECR_URL/$ECR_REGISTERY:latest
+        echo $ECR_URL/$ECR_REGISTERY:latest $ECR_URL/$ECR_REGISTERY:$ECR_IMAGE_TAG
+        echo $ECR_URL/$ECR_REGISTERY:latest
+        echo $ECR_URL/$ECR_REGISTERY:$ECR_IMAGE_TAG
         docker build -t $ECR_URL/$ECR_REGISTERY:latest .
         docker tag $ECR_URL/$ECR_REGISTERY:latest $ECR_URL/$ECR_REGISTERY:$ECR_IMAGE_TAG
         docker push $ECR_URL/$ECR_REGISTERY:latest
