@@ -1,0 +1,57 @@
+name: Build and push
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read  
+
+jobs:
+  ecr_login:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1-node16
+      with:
+        role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+        role-session-name: github-actions-build-and-push-backend-project
+        aws-region: eu-central-1
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Set ECR variables
+      id: ecr-variables-setup
+      run: |
+        ::set-output name=ECR_URL::${{ steps.login-ecr.outputs.registry }}
+        ::set-output name=ECR_REGISTERY::backend-project
+        ::set-output name=ECR_IMAGE_TAG::${{ github.ref_name }}
+    
+
+  build_and_push:
+    runs-on: ubuntu-latest
+    needs: ecr_login
+
+    steps:
+    - name: Checkout from repo
+      uses: actions/checkout@v3
+      
+    - name: Build, tag, and push image to Amazon ECR
+      env:
+        ECR_URL: ${{ steps.ecr_login.outputs.ECR_URL }}
+        ECR_REGISTERY: ${{ steps.ecr_login.outputs.ECR_REGISTERY }}
+        ECR_IMAGE_TAG: ${{ steps.ecr_login.outputs.ECR_IMAGE_TAG }}
+      run: |
+        echo $ECR_URL
+        echo $ECR_REGISTERY
+        echo $ECR_IMAGE_TAG
+        
+#       run: |
+#         docker build -t $CR_URL/$CR_IMAGE:latest .
+#         docker tag $CR_URL/$CR_IMAGE:latest $CR_URL/$CR_IMAGE:${{ github.ref_name }}
+#         docker push $CR_URL/$CR_IMAGE:latest
+#         docker push $CR_URL/$CR_IMAGE:${{ github.ref_name }}
+      
