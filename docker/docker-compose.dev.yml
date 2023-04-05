@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  backend-project-api:
+    container_name: backend-project-dev
+    build:
+      context: ../
+      target: prod
+    environment:
+      - PORT=$PORT
+    ports:
+      - $PORT:$PORT
+    volumes:
+      - ../app:/usr/app
+      - /usr/app/node_modules/
+    networks:
+      - backend-project-network
+
+networks:
+  backend-project-network:

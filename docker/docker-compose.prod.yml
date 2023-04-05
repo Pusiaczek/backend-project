@@ -1,0 +1,17 @@
+# version: "3.8"
+
+# services:
+#   backend-project-api:
+#     container_name: backend-project-prod
+#     build:
+#       context: ../
+#       target: prod
+#     ports:
+#       - "4000:4000"
+#     networks:
+#       - backend-project-network
+
+# networks:
+#   backend-project-network:
+
+
