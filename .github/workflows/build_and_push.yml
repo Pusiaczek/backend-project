@@ -12,6 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+    
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1-node16
       with:
@@ -29,7 +32,6 @@ jobs:
         ECR_REGISTERY: backend-project
         ECR_IMAGE_TAG: ${{ github.ref_name }}
       run: |
-        ls -la
         docker build -t $ECR_URL/$ECR_REGISTERY:latest .
         docker tag $ECR_URL/$ECR_REGISTERY:latest $ECR_URL/$ECR_REGISTERY:$ECR_IMAGE_TAG
         docker push $ECR_URL/$ECR_REGISTERY:latest
